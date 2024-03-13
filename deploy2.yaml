@@ -4,9 +4,10 @@
   gather_facts: true
   strategy: linear
   vars:
-    full_hostname: "{{ ansible_fqdn }}"
-    customer: "{{ full_hostname.split('-')[0] }}"
-    domain: "{{ full_hostname.split('.')[1:] | join('.') }}"
+  #  get the FQDN, split it so that the first 3-4 chars of the host XXX-blabla.domain.com which identifies the customer can be used later and also the domain
+  #  full_hostname: "{{ ansible_fqdn }}"
+  #  customer: "{{ full_hostname.split('-')[0] }}"
+  #  domain: "{{ full_hostname.split('.')[1:] | join('.') }}"
 
     checkmk_agent_version: "2.0.0p6"
     checkmk_agent_edition: cee
@@ -34,7 +35,7 @@
     checkmk_agent_host_name: "{{ hostvars[inventory_hostname]['ansible_fqdn'] }}"
     checkmk_agent_host_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
   pre_tasks:
-    - name: Ping Windows hosts
+    - name: Ping Windows hosts # to check if the connection is working
       ansible.windows.win_ping:
 #    - name: Set Checkmk agent host attributes
 #      set_fact:
