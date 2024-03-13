@@ -1,0 +1,6 @@
+ansible==8.7.0
+pykerberos==1.2.4
+pyvmomi==8.0.2.0.1
+pywinrm==0.4.3
+requests==2.31.0
+requests-credssp==2.0.0

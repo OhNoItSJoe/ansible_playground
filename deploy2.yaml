@@ -1,0 +1,45 @@
+---
+- name: "Install check_mk agent and configure hosts"
+  hosts: all
+  gather_facts: true
+  strategy: linear
+  vars:
+    full_hostname: "{{ ansible_fqdn }}"
+    customer: "{{ full_hostname.split('-')[0] }}"
+    domain: "{{ full_hostname.split('.')[1:] | join('.') }}"
+
+    checkmk_agent_version: "2.0.0p6"
+    checkmk_agent_edition: cee
+    checkmk_agent_server_protocol: "https"
+    checkmk_agent_server: "redacted"
+    checkmk_agent_site: "Instanz1"
+    checkmk_agent_registration_server: "{{ checkmk_agent_server }}"
+    checkmk_agent_registration_site: "{{ checkmk_agent_site }}"
+    checkmk_agent_server_validate_certs: false
+    checkmk_agent_server_port: "{% if checkmk_agent_server_protocol == 'https' %}443{% else %}80{% endif %}"
+    checkmk_agent_user: "automation.ansible"
+    checkmk_agent_secret: "redacted"
+    checkmk_agent_port: 6556
+    checkmk_agent_auto_activate: true
+    checkmk_agent_add_host: true
+    checkmk_agent_discover: true
+    checkmk_agent_discover_max_parallel_tasks: 0
+    checkmk_agent_update: true
+    checkmk_agent_tls: true
+    checkmk_agent_delegate_api_calls: localhost
+    checkmk_agent_delegate_download: "{{ inventory_hostname }}"
+    checkmk_agent_folder: "/redacted"
+    checkmk_agent_mode: pull
+    checkmk_agent_no_log: false
+    checkmk_agent_host_name: "{{ hostvars[inventory_hostname]['ansible_fqdn'] }}"
+    checkmk_agent_host_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+  pre_tasks:
+    - name: Ping Windows hosts
+      ansible.windows.win_ping:
+#    - name: Set Checkmk agent host attributes
+#      set_fact:
+#        checkmk_agent_host_attributes:
+#          customer: "{{ customer }}"
+#          domain: "{{ domain }}"
+  roles:
+    - checkmk.general.agent

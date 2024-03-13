@@ -1,0 +1,28 @@
+---
+- name: Folder Lookup
+  hosts: localhost
+  gather_facts: false
+  vars:
+    ansible_lookup_checkmk_server_url: "redacted"
+    ansible_lookup_checkmk_site: "Instanz1"
+    ansible_lookup_automation_user: "automation.ansible"
+    ansible_lookup_automation_secret: "redacted"
+    ansible_lookup_validate_certs: false
+  tasks:
+    - name: Get all subfolders of the main folder recursively
+      ansible.builtin.debug:
+        msg: "Folder tree: {{ item.id }}"
+      loop: "{{
+        lookup('checkmk.general.folders',
+            '~/~Berlin',
+            show_hosts=False,
+            recursive=False,
+            server_url=ansible_lookup_checkmk_server_url,
+            site=ansible_lookup_checkmk_site,
+            automation_user=ansible_lookup_automation_user,
+            automation_secret=ansible_lookup_automation_secret,
+            validate_certs=ansible_lookup_validate_certs
+            )
+        }}"
+      loop_control:
+          label: "{{ item.id }}"

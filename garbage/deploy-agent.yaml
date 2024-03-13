@@ -1,0 +1,19 @@
+---
+- name: "Install check_mk agent and configure hosts"
+  hosts: all
+  gather_facts: true
+  strategy: linear
+  vars_files:
+    - /checkmk_vars/agent_vars.yaml
+  vars:
+    full_hostname: "{{ ansible_fqdn }}"
+    customer: "{{ full_hostname.split('-')[0] }}"
+    domain: "{{ full_hostname.split('.')[1:] | join('.') }}"
+
+    
+  pre_tasks:
+    - name: Ping Windows hosts
+      ansible.windows.win_ping:
+
+  roles:
+    - checkmk.general.agent

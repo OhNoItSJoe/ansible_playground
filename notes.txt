@@ -1,0 +1,6 @@
+# WinRM needs to be anbled on windows hosts
+wget https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -outFile ConfigureRemotingForAnsible.ps1
+.\ConfigureRemotingForAnsible.ps1 -EnableCredSSP -Verbose
+restart-service winrm
+winrm enumerate winrm/config/Listener
+
